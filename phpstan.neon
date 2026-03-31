@@ -1,0 +1,11 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src/
+    excludePaths:
+        - src/FormFlowServiceProvider.php
+    tmpDir: build/phpstan
+    reportUnmatchedIgnoredErrors: false

@@ -1,0 +1,68 @@
+{
+    "name": "robinsonryan/form-flow",
+    "description": "A Laravel package for multi-step form flows with tenant customization and visibility modes",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ryan Robinson",
+            "email": "ryan@robinsonryan.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/contracts": "^11.0 || ^12.0",
+        "illuminate/database": "^11.0 || ^12.0",
+        "illuminate/support": "^11.0 || ^12.0",
+        "illuminate/validation": "^11.0 || ^12.0",
+        "opis/json-schema": "^2.3",
+        "spatie/laravel-data": "^4.0"
+    },
+    "require-dev": {
+        "driftingly/rector-laravel": "^2.1",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.24",
+        "orchestra/testbench": "^9.0 || ^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-faker": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "rector/rector": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "RobinsonRyan\\FormFlow\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RobinsonRyan\\FormFlow\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "lint": "pint",
+        "analyse": "phpstan analyse",
+        "rector": "rector process",
+        "rector:dry": "rector process --dry-run",
+        "check": [
+            "@lint",
+            "@analyse",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RobinsonRyan\\FormFlow\\FormFlowServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
