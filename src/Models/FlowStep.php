@@ -7,6 +7,7 @@ namespace RobinsonRyan\FormFlow\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 use RobinsonRyan\FormFlow\Enums\ActorType;
 use RobinsonRyan\FormFlow\Enums\VisibilityMode;
 use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
@@ -43,6 +44,7 @@ final class FlowStep extends Model
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -56,6 +58,7 @@ final class FlowStep extends Model
         ];
     }
 
+    #[Override]
     public function getTable(): string
     {
         return config('form-flow.tables.flow_steps', 'flow_steps');
@@ -114,7 +117,7 @@ final class FlowStep extends Model
         }
 
         if ($this->validation_rules !== null) {
-            $rules = array_merge($rules, $this->validation_rules);
+            return array_merge($rules, $this->validation_rules);
         }
 
         return $rules;
@@ -130,11 +133,7 @@ final class FlowStep extends Model
         $type = $field['type'] ?? 'text';
         $required = $field['required'] ?? false;
 
-        if ($required) {
-            $rules[] = 'required';
-        } else {
-            $rules[] = 'nullable';
-        }
+        $rules[] = $required ? 'required' : 'nullable';
 
         $rules[] = match ($type) {
             'email' => 'email',

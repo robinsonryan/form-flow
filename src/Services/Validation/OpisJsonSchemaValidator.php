@@ -43,7 +43,7 @@ final class OpisJsonSchemaValidator
 
             $error = $report->hasError() ? $report->error() : null;
 
-            if ($error === null) {
+            if (! $error instanceof \Opis\JsonSchema\Errors\ValidationError) {
                 return ValidationResultData::failure([
                     new ValidationErrorData('#', 'json_schema', 'Validation failed'),
                 ]);
@@ -143,13 +143,13 @@ final class OpisJsonSchemaValidator
     private function safeJsonEncode(mixed $value): string
     {
         try {
-            return (string) json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            return json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         } catch (Throwable) {
             if (is_scalar($value)) {
                 return (string) $value;
             }
 
-            return (string) var_export($value, true);
+            return var_export($value, true);
         }
     }
 }

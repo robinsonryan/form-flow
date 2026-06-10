@@ -108,7 +108,7 @@ final class FlowManager implements FlowManagerInterface
     ): ValidationResultData {
         $step = $this->stepResolver->resolveStep($flow, $stepKey, $template);
 
-        if ($step === null) {
+        if (! $step instanceof ResolvedStep) {
             return ValidationResultData::failure([], 'Step not found');
         }
 

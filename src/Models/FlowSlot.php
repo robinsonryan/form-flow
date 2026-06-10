@@ -7,6 +7,7 @@ namespace RobinsonRyan\FormFlow\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
 
 /**
@@ -30,6 +31,7 @@ final class FlowSlot extends Model
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -37,6 +39,7 @@ final class FlowSlot extends Model
         ];
     }
 
+    #[Override]
     public function getTable(): string
     {
         return config('form-flow.tables.flow_slots', 'flow_slots');

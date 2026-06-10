@@ -7,6 +7,7 @@ namespace RobinsonRyan\FormFlow\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 use RobinsonRyan\FormFlow\Enums\FlowStatus;
 use RobinsonRyan\FormFlow\Enums\OwnerScope;
 use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
@@ -37,6 +38,7 @@ final class Flow extends Model
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -45,6 +47,7 @@ final class Flow extends Model
         ];
     }
 
+    #[Override]
     public function getTable(): string
     {
         return config('form-flow.tables.flows', 'flows');

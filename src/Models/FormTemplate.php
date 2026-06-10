@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 use RobinsonRyan\FormFlow\Enums\FlowStatus;
 use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
 
@@ -35,6 +36,7 @@ final class FormTemplate extends Model
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -42,6 +44,7 @@ final class FormTemplate extends Model
         ];
     }
 
+    #[Override]
     public function getTable(): string
     {
         return config('form-flow.tables.form_templates', 'form_templates');

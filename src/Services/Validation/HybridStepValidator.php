@@ -119,11 +119,7 @@ final class HybridStepValidator implements StepValidatorInterface
         $type = $field['type'] ?? 'text';
         $required = $field['required'] ?? false;
 
-        if ($required) {
-            $rules[] = 'required';
-        } else {
-            $rules[] = 'nullable';
-        }
+        $rules[] = $required ? 'required' : 'nullable';
 
         $rules[] = match ($type) {
             'email' => 'email',

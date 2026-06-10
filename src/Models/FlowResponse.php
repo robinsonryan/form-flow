@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 use RobinsonRyan\FormFlow\Enums\ActorType;
 use RobinsonRyan\FormFlow\Enums\ResponseStatus;
 use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
@@ -44,6 +45,7 @@ final class FlowResponse extends Model
     /**
      * @return array<string, mixed>
      */
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -56,6 +58,7 @@ final class FlowResponse extends Model
         ];
     }
 
+    #[Override]
     public function getTable(): string
     {
         return config('form-flow.tables.flow_responses', 'flow_responses');

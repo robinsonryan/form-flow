@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace RobinsonRyan\FormFlow;
 
 use Illuminate\Support\ServiceProvider;
+use Override;
 use RobinsonRyan\FormFlow\Contracts\FlowManagerInterface;
 use RobinsonRyan\FormFlow\Contracts\StepResolverInterface;
 use RobinsonRyan\FormFlow\Contracts\StepValidatorInterface;
@@ -15,6 +16,7 @@ use RobinsonRyan\FormFlow\Services\Validation\OpisJsonSchemaValidator;
 
 final class FormFlowServiceProvider extends ServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         $this->mergeConfigFrom(
@@ -26,13 +28,13 @@ final class FormFlowServiceProvider extends ServiceProvider
 
         $this->app->singleton(StepResolverInterface::class, StepResolver::class);
 
-        $this->app->singleton(StepValidatorInterface::class, function ($app) {
+        $this->app->singleton(StepValidatorInterface::class, function ($app): HybridStepValidator {
             return new HybridStepValidator(
                 $app->make(OpisJsonSchemaValidator::class),
             );
         });
 
-        $this->app->singleton(FlowManagerInterface::class, function ($app) {
+        $this->app->singleton(FlowManagerInterface::class, function ($app): FlowManager {
             return new FlowManager(
                 $app->make(StepResolverInterface::class),
                 $app->make(StepValidatorInterface::class),

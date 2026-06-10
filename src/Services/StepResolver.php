@@ -156,7 +156,7 @@ final class StepResolver implements StepResolverInterface
         ?FormTemplate $template,
         int &$currentPosition,
     ): void {
-        if ($template === null) {
+        if (! $template instanceof FormTemplate) {
             return;
         }
 

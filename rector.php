@@ -20,7 +20,7 @@ return RectorConfig::configure()
         SetList::DEAD_CODE,
         SetList::EARLY_RETURN,
         SetList::TYPE_DECLARATION,
-        LaravelSetList::LARAVEL_110,
+        LaravelSetList::LARAVEL_130,
         LaravelSetList::LARAVEL_CODE_QUALITY,
     ])
     ->withPreparedSets(
