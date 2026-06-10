@@ -29,8 +29,8 @@ return new class extends Migration
             $table->json('validation_rules')->nullable();
             $table->json('validation_schema')->nullable();
             $table->json('ui_schema')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestampsTz();
+            $table->softDeletesTz();
 
             $table->foreign('form_template_id')
                 ->references('id')

@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('owner_scope')->default('global');
             $table->uuid('account_id')->nullable()->index();
             $table->string('status')->default('draft');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestampsTz();
+            $table->softDeletesTz();
 
             $table->index(['owner_scope', 'status']);
         });

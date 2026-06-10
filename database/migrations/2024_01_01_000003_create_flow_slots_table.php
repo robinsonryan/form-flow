@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedInteger('position')->default(0);
             $table->text('description')->nullable();
-            $table->timestamps();
+            $table->timestampsTz();
 
             $table->foreign('flow_id')
                 ->references('id')

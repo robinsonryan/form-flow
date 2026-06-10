@@ -29,9 +29,9 @@ return new class extends Migration
             $table->json('responses')->nullable();
             $table->json('step_progress')->nullable();
             $table->string('status')->default('in_progress');
-            $table->timestamp('submitted_at')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestampTz('submitted_at')->nullable();
+            $table->timestampsTz();
+            $table->softDeletesTz();
 
             $table->foreign('flow_id')
                 ->references('id')
