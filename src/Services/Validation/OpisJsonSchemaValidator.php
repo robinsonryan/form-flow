@@ -11,7 +11,7 @@ use RobinsonRyan\FormFlow\Data\ValidationErrorData;
 use RobinsonRyan\FormFlow\Data\ValidationResultData;
 use Throwable;
 
-final class OpisJsonSchemaValidator
+final readonly class OpisJsonSchemaValidator
 {
     private OpisValidator $validator;
 

@@ -28,18 +28,14 @@ final class FormFlowServiceProvider extends ServiceProvider
 
         $this->app->singleton(StepResolverInterface::class, StepResolver::class);
 
-        $this->app->singleton(StepValidatorInterface::class, function ($app): HybridStepValidator {
-            return new HybridStepValidator(
-                $app->make(OpisJsonSchemaValidator::class),
-            );
-        });
+        $this->app->singleton(StepValidatorInterface::class, fn ($app): HybridStepValidator => new HybridStepValidator(
+            $app->make(OpisJsonSchemaValidator::class),
+        ));
 
-        $this->app->singleton(FlowManagerInterface::class, function ($app): FlowManager {
-            return new FlowManager(
-                $app->make(StepResolverInterface::class),
-                $app->make(StepValidatorInterface::class),
-            );
-        });
+        $this->app->singleton(FlowManagerInterface::class, fn ($app): FlowManager => new FlowManager(
+            $app->make(StepResolverInterface::class),
+            $app->make(StepValidatorInterface::class),
+        ));
 
         $this->app->alias(FlowManagerInterface::class, 'form-flow');
     }

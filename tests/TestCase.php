@@ -12,11 +12,6 @@ abstract class TestCase extends Orchestra
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     /**
      * @return array<int, class-string>
      */

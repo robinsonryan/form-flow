@@ -10,10 +10,10 @@ use RobinsonRyan\FormFlow\Data\ResolvedStep;
 use RobinsonRyan\FormFlow\Data\ValidationErrorData;
 use RobinsonRyan\FormFlow\Data\ValidationResultData;
 
-final class HybridStepValidator implements StepValidatorInterface
+final readonly class HybridStepValidator implements StepValidatorInterface
 {
     public function __construct(
-        private readonly OpisJsonSchemaValidator $jsonSchemaValidator,
+        private OpisJsonSchemaValidator $jsonSchemaValidator,
     ) {}
 
     /**

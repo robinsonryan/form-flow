@@ -18,11 +18,11 @@ use RobinsonRyan\FormFlow\Models\Flow;
 use RobinsonRyan\FormFlow\Models\FlowResponse;
 use RobinsonRyan\FormFlow\Models\FormTemplate;
 
-final class FlowManager implements FlowManagerInterface
+final readonly class FlowManager implements FlowManagerInterface
 {
     public function __construct(
-        private readonly StepResolverInterface $stepResolver,
-        private readonly StepValidatorInterface $stepValidator,
+        private StepResolverInterface $stepResolver,
+        private StepValidatorInterface $stepValidator,
     ) {}
 
     public function getFlow(string $flowKey, ?string $accountId = null): ?Flow

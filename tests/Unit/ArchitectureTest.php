@@ -8,7 +8,7 @@ arch('All source files use strict types')
 
 arch('Models extend Eloquent Model')
     ->expect('RobinsonRyan\FormFlow\Models')
-    ->toExtend('Illuminate\Database\Eloquent\Model');
+    ->toExtend(Illuminate\Database\Eloquent\Model::class);
 
 arch('Enums are backed enums')
     ->expect('RobinsonRyan\FormFlow\Enums')
@@ -16,4 +16,4 @@ arch('Enums are backed enums')
 
 arch('Data classes extend Spatie Data')
     ->expect('RobinsonRyan\FormFlow\Data')
-    ->toExtend('Spatie\LaravelData\Data');
+    ->toExtend(Spatie\LaravelData\Data::class);
