@@ -1,19 +1,26 @@
 name: form-flow
 type: php
 docroot: ""
-php_version: "8.3"
+php_version: "8.4"
 webserver_type: nginx-fpm
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns: []
 database:
-    type: mariadb
-    version: "10.11"
+    type: postgres
+    version: "18"
 use_dns_when_possible: true
 composer_version: "2"
 disable_settings_management: true
 web_environment: []
 corepack_enable: false
+hooks:
+    post-start:
+        # The Pest suite runs against a real Postgres 18 database, because the
+        # package schema depends on the native uuidv7() column default. Testbench
+        # points at a `testing` database that the DDEV postgres image does not
+        # create for us.
+        - exec: psql -h db -U db -d db -tc "SELECT 1 FROM pg_database WHERE datname = 'testing'" | grep -q 1 || psql -h db -U db -d db -c "CREATE DATABASE testing"
 
 # Key features of DDEV's config.yaml:
 
