@@ -154,27 +154,37 @@ go into `responses['_handoff']` — the same JSON column as step answers. A step
 keyed `_handoff` would collide. The package sends no mail; storing the address is
 all it does.
 
-**UUIDs are v4, and `native_uuids` changes who generates them.** With
-`form-flow.database.native_uuids` false (the default), `HasConfigurableUuid` boots
-a `creating` hook that fills the key with `Str::uuid()` — **UUIDv4, not v7**,
-despite the wider harness convention. With it true, the hook does not register at
-all and the migrations instead give `id` a `DB::raw('gen_random_uuid()')` column
-default, which is Postgres-only. Flipping that config after tables exist does
-nothing to the existing schema.
+**The database assigns every primary key, and it must be PostgreSQL 18+.** Each
+table declares `id` with a `DB::raw('uuidv7()')` column default, so Postgres
+generates the UUID7 during INSERT. There is no PHP fallback and no config switch
+— `ConfiguresIdentifiers` only sets `$incrementing = true` and
+`$keyType = 'string'`. `$incrementing = true` reads like a mistake on a UUID
+column but is load-bearing: in Eloquent it means "the database assigns the key",
+which routes the insert through `insertGetId()` and compiles the `returning "id"`
+clause that hydrates the generated UUID back onto the model. Drop it and every
+`create()` returns a model with a null key.
+
+Consequences worth knowing: the package will not install against MySQL, MariaDB
+or SQLite, and any host code that needs an id *before* the row is written must
+generate its own `Str::uuid7()` and pass it in explicitly.
 
 **Foreign keys cascade on hard delete only.** The child tables use
 `cascadeOnDelete()`, but five of the six models use `SoftDeletes` — so
 `$flow->delete()` soft-deletes the flow and leaves its steps, slots, templates
 and responses untouched and still visible to their own queries.
 
-**Tests run on SQLite, not Postgres.** `tests/TestCase.php` pins
-`database.default` to an in-memory SQLite connection in `defineEnvironment()`.
-This diverges from the stack's usual "packages test against DDEV's real Postgres"
-rule, and the divergence has teeth: the `native_uuids` branch, `gen_random_uuid()`
-defaults, `timestampsTz`/`softDeletesTz` and JSON-column behavior are **never
-exercised against Postgres by this suite**. A green gate here does not prove the
-Postgres path works. `defineEnvironment()` also forces `native_uuids` to false, so
-that branch has no coverage at all.
+**Tests run against real Postgres, so DDEV must be up.** `tests/TestCase.php`
+points `database.default` at the DDEV `db` service (Postgres 18) and a `testing`
+database that a `post-start` hook in `.ddev/config.yaml` creates. There is no
+SQLite fallback — the schema needs `uuidv7()`. Running `pest` outside the
+container, or against a stopped DDEV, fails at connection rather than skipping.
+Host, port, database, username and password are each overridable via
+`FORM_FLOW_TEST_DB_*` environment variables.
+
+**Fixtures must use real UUIDs for host-supplied ids.** `account_id`,
+`initiated_by`, `completed_by` and `subject_id` are `uuid` columns. SQLite once
+accepted readable placeholders like `'account-123'`; Postgres rejects them with
+`SQLSTATE[22P02]`. Use the `fixtureUuid()` helper in `tests/Pest.php`.
 
 ## Version constraints and tooling
 
@@ -238,9 +248,9 @@ Full definition: `imports/package-quality-gate.md`. Skill: `/package-quality`.
 
 ## Testing
 
-Pest + Orchestra Testbench. **Against in-memory SQLite, not Postgres** — see the
-gotcha above; this is a known divergence from the stack default, not a thing to
-copy into a new package.
+Pest + Orchestra Testbench, against the DDEV Postgres 18 `db` service — the
+stack default, and non-negotiable here because the schema uses `uuidv7()` column
+defaults that SQLite cannot express. DDEV must be running.
 
 ```bash
 ddev composer test

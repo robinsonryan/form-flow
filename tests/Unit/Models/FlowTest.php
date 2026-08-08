@@ -12,7 +12,7 @@ use RobinsonRyan\FormFlow\Models\FlowStep;
 uses(RefreshDatabase::class);
 
 describe('Flow Model', function (): void {
-    it('creates a flow with uuid', function (): void {
+    it('lets the database assign a uuid7 primary key', function (): void {
         $flow = Flow::create([
             'key' => 'test-flow',
             'name' => 'Test Flow',
@@ -21,8 +21,13 @@ describe('Flow Model', function (): void {
             'status' => FlowStatus::Draft,
         ]);
 
+        // PostgreSQL's uuidv7() column default generates the key during INSERT
+        // and the `returning "id"` clause hands it back to the model. The
+        // version nibble (7) and variant nibble (8-b) prove it is a UUID7 and
+        // not the UUID4 that Laravel used to generate in PHP.
         expect($flow->id)->toBeString()
-            ->and($flow->id)->toHaveLength(36);
+            ->and($flow->id)->toHaveLength(36)
+            ->and($flow->id)->toMatch('/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/');
     });
 
     it('casts owner_scope to enum', function (): void {
@@ -100,7 +105,7 @@ describe('Flow Model', function (): void {
             'key' => 'tenant-flow',
             'name' => 'Tenant Flow',
             'owner_scope' => OwnerScope::Tenant,
-            'account_id' => 'account-123',
+            'account_id' => fixtureUuid(),
             'status' => FlowStatus::Draft,
         ]);
 

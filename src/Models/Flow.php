@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 use RobinsonRyan\FormFlow\Enums\FlowStatus;
 use RobinsonRyan\FormFlow\Enums\OwnerScope;
-use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
+use RobinsonRyan\FormFlow\Traits\ConfiguresIdentifiers;
 
 /**
  * @property string $id
@@ -30,7 +30,7 @@ use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
  */
 final class Flow extends Model
 {
-    use HasConfigurableUuid;
+    use ConfiguresIdentifiers;
     use SoftDeletes;
 
     protected $guarded = [];

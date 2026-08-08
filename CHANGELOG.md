@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **PostgreSQL 18+ is now required — BREAKING for any consumer on MySQL, MariaDB
+  or SQLite.** Every table's `id` column is declared with a native `uuidv7()`
+  default, so the database generates each primary key on insert. The package was
+  developed and tested against MariaDB while advertising a Postgres option, which
+  meant the Postgres path shipped unexercised; this settles on one engine and
+  brings the package in line with the UUID7 primary key convention used across
+  the stack.
+- **Removed the `form-flow.database.native_uuids` config option — BREAKING if you
+  set it.** It selected between Laravel generating a UUID**4** in PHP (the
+  default) and a Postgres-only `gen_random_uuid()` column default, also a UUID4.
+  Neither branch produced the UUID7 the convention calls for, and the PHP branch
+  was the only one with test coverage. Both are gone; the `uuidv7()` default is
+  unconditional. Delete the key from any published config file — a stale
+  `native_uuids` entry is now silently ignored.
+- **Renamed the `HasConfigurableUuid` trait to `ConfiguresIdentifiers` —
+  BREAKING if you used it on your own models.** With the config switch gone there
+  is nothing configurable left; the trait no longer boots a `creating` hook and
+  only declares `$incrementing = true` and `$keyType = 'string'`, which is what
+  makes Eloquent read the database-generated key back off the INSERT's
+  `returning "id"` clause.
+
+### Fixed
+
+- Model primary keys are now UUID**7** rather than UUID4, so rows sort in
+  creation order and index locality improves on wide tables.
+
+### Testing
+
+- The Pest suite runs against the DDEV Postgres 18 service instead of in-memory
+  SQLite, closing a gap where `uuidv7()` defaults, `timestampsTz`/`softDeletesTz`
+  columns and JSON behavior were never exercised against the real engine. The
+  DDEV `post-start` hook creates the `testing` database; `FORM_FLOW_TEST_DB_*`
+  environment variables override the connection.
+- Test fixtures use real UUIDs for `account_id` and actor ids, which are `uuid`
+  columns that SQLite tolerated placeholder strings in and Postgres does not.
+- The primary key test now asserts the UUID version and variant nibbles instead
+  of only a 36-character length, which a UUID4 also satisfied.
+
 ## [0.2.0] - 2026-08-08
 
 ### Changed

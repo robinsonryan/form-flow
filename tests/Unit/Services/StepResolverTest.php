@@ -267,7 +267,7 @@ describe('StepResolver', function (): void {
             ]);
 
             $template = FormTemplate::create([
-                'account_id' => 'account-123',
+                'account_id' => fixtureUuid(),
                 'flow_id' => $this->flow->id,
                 'name' => 'Custom Template',
                 'status' => 'active',
@@ -308,7 +308,7 @@ describe('StepResolver', function (): void {
             ]);
 
             $template = FormTemplate::create([
-                'account_id' => 'account-123',
+                'account_id' => fixtureUuid(),
                 'flow_id' => $this->flow->id,
                 'name' => 'Custom Template',
                 'status' => 'active',
@@ -349,7 +349,7 @@ describe('StepResolver', function (): void {
             ]);
 
             $template = FormTemplate::create([
-                'account_id' => 'account-123',
+                'account_id' => fixtureUuid(),
                 'flow_id' => $this->flow->id,
                 'name' => 'Custom Template',
                 'status' => 'active',

@@ -14,14 +14,15 @@ return [
     'database' => [
         /*
         |--------------------------------------------------------------------------
-        | Native UUID Support
+        | Primary Keys
         |--------------------------------------------------------------------------
         |
-        | When enabled, uses PostgreSQL 18+ native gen_random_uuid() for primary
-        | key generation. When disabled, Laravel generates UUIDs in PHP.
+        | There is no switch here. Every table declares its `id` column with a
+        | native PostgreSQL 18 `uuidv7()` default, so the database assigns every
+        | primary key on insert and Laravel never generates one. This package
+        | therefore requires PostgreSQL 18 or newer.
         |
         */
-        'native_uuids' => env('FORM_FLOW_NATIVE_UUIDS', false),
 
         /*
         |--------------------------------------------------------------------------

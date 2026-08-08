@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Override;
 use RobinsonRyan\FormFlow\Enums\ActorType;
 use RobinsonRyan\FormFlow\Enums\VisibilityMode;
-use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
+use RobinsonRyan\FormFlow\Traits\ConfiguresIdentifiers;
 
 /**
  * @property string $id
@@ -31,7 +31,7 @@ use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
  */
 final class FlowStep extends Model
 {
-    use HasConfigurableUuid;
+    use ConfiguresIdentifiers;
     use SoftDeletes;
 
     protected $guarded = [];

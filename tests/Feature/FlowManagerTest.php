@@ -35,7 +35,7 @@ describe('FlowManager', function (): void {
             'status' => FlowStatus::Active,
         ]);
 
-        $this->accountId = 'account-123';
+        $this->accountId = fixtureUuid();
     });
 
     describe('getFlow', function (): void {
@@ -63,17 +63,19 @@ describe('FlowManager', function (): void {
 
     describe('startFlow', function (): void {
         it('creates a new flow response', function (): void {
+            $initiatorId = fixtureUuid();
+
             $response = $this->manager->startFlow(
                 flow: $this->flow,
                 accountId: $this->accountId,
                 initiatedByType: ActorType::Customer,
-                initiatedById: 'user-123',
+                initiatedById: $initiatorId,
             );
 
             expect($response)->not->toBeNull()
                 ->and($response->flow_id)->toBe($this->flow->id)
                 ->and($response->account_id)->toBe($this->accountId)
-                ->and($response->initiated_by)->toBe('user-123')
+                ->and($response->initiated_by)->toBe($initiatorId)
                 ->and($response->initiated_by_type)->toBe(ActorType::Customer)
                 ->and($response->status)->toBe(ResponseStatus::InProgress);
         });
@@ -213,6 +215,8 @@ describe('FlowManager', function (): void {
 
     describe('complete and cancel', function (): void {
         it('completes a response', function (): void {
+            $completedById = fixtureUuid();
+
             $response = $this->manager->startFlow(
                 flow: $this->flow,
                 accountId: $this->accountId,
@@ -221,7 +225,7 @@ describe('FlowManager', function (): void {
 
             $result = $this->manager->complete(
                 $response,
-                'user-456',
+                $completedById,
                 ActorType::Applicant,
             );
 
@@ -230,7 +234,7 @@ describe('FlowManager', function (): void {
             $response->refresh();
 
             expect($response->status)->toBe(ResponseStatus::Completed)
-                ->and($response->completed_by)->toBe('user-456')
+                ->and($response->completed_by)->toBe($completedById)
                 ->and($response->completed_by_type)->toBe(ActorType::Applicant)
                 ->and($response->submitted_at)->not->toBeNull();
         });
@@ -349,7 +353,7 @@ describe('Full Flow Scenarios', function (): void {
         $stepValidator = new HybridStepValidator($jsonSchemaValidator);
 
         $this->manager = new FlowManager($stepResolver, $stepValidator);
-        $this->accountId = 'account-123';
+        $this->accountId = fixtureUuid();
     });
 
     it('completes a full applicant-only flow', function (): void {
@@ -403,6 +407,9 @@ describe('Full Flow Scenarios', function (): void {
     });
 
     it('completes a customer-starts-applicant-finishes flow', function (): void {
+        $customerId = fixtureUuid();
+        $applicantId = fixtureUuid();
+
         $flow = Flow::create([
             'key' => 'handoff-flow',
             'name' => 'Handoff Flow',
@@ -436,7 +443,7 @@ describe('Full Flow Scenarios', function (): void {
             flow: $flow,
             accountId: $this->accountId,
             initiatedByType: ActorType::Customer,
-            initiatedById: 'customer-user-1',
+            initiatedById: $customerId,
         );
 
         $this->manager->submitStep($response, 'employer-info', ['company' => 'Acme Corp']);
@@ -453,13 +460,13 @@ describe('Full Flow Scenarios', function (): void {
         $this->manager->submitStep($response, 'applicant-info', ['ssn' => '123456789']);
         $response->refresh();
 
-        $this->manager->complete($response, 'applicant-user-1', ActorType::Applicant);
+        $this->manager->complete($response, $applicantId, ActorType::Applicant);
         $response->refresh();
 
         expect($response->status)->toBe(ResponseStatus::Completed)
-            ->and($response->initiated_by)->toBe('customer-user-1')
+            ->and($response->initiated_by)->toBe($customerId)
             ->and($response->initiated_by_type)->toBe(ActorType::Customer)
-            ->and($response->completed_by)->toBe('applicant-user-1')
+            ->and($response->completed_by)->toBe($applicantId)
             ->and($response->completed_by_type)->toBe(ActorType::Applicant);
     });
 

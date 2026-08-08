@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(config('form-flow.tables.flows', 'flows'), function (Blueprint $table): void {
-            if (config('form-flow.database.native_uuids', false)) {
-                $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
-            } else {
-                $table->uuid('id')->primary();
-            }
+            $table->uuid('id')->primary()->default(DB::raw('uuidv7()'));
 
             $table->string('key')->unique();
             $table->string('name');

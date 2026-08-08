@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
-use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
+use RobinsonRyan\FormFlow\Traits\ConfiguresIdentifiers;
 
 /**
  * @property string $id
@@ -24,7 +24,7 @@ use RobinsonRyan\FormFlow\Traits\HasConfigurableUuid;
  */
 final class FlowSlot extends Model
 {
-    use HasConfigurableUuid;
+    use ConfiguresIdentifiers;
 
     protected $guarded = [];
 

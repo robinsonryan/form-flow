@@ -27,14 +27,23 @@ abstract class TestCase extends Orchestra
      */
     protected function defineEnvironment($app): void
     {
+        // The package schema relies on PostgreSQL's native uuidv7() as a column
+        // default, so the suite runs against a real Postgres database (the DDEV
+        // `db` service) rather than SQLite.
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
+            'driver' => 'pgsql',
+            'host' => env('FORM_FLOW_TEST_DB_HOST', 'db'),
+            'port' => (int) env('FORM_FLOW_TEST_DB_PORT', 5432),
+            'database' => env('FORM_FLOW_TEST_DB_DATABASE', 'testing'),
+            'username' => env('FORM_FLOW_TEST_DB_USERNAME', 'db'),
+            'password' => env('FORM_FLOW_TEST_DB_PASSWORD', 'db'),
+            'charset' => 'utf8',
             'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
         ]);
-
-        $app['config']->set('form-flow.database.native_uuids', false);
     }
 
     protected function defineDatabaseMigrations(): void
