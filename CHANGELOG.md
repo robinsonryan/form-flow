@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Dropped Laravel 11 support — BREAKING for any consumer pinned to Laravel 11.**
+  `illuminate/*` narrows from `^11.0 || ^12.0 || ^13.0` to `^12.0 || ^13.0`, and
+  `orchestra/testbench` from `^9.0 || ^10.0 || ^11.0` to `^10.0 || ^11.0`
+  (Testbench 9 *is* Laravel 11, so leaving it declared a harness that can no
+  longer resolve). Laravel 11 was advertised but structurally untestable: the
+  package requires `pestphp/pest ^4.0`, Pest 4 requires PHPUnit 12, and Testbench
+  9 caps at PHPUnit 11 — so a Laravel 11 matrix could never install, and no
+  consumer on Laravel 11 was ever verified. This removes a compatibility promise
+  nobody could keep rather than removing working support.
 - **Lowered the PHP floor from `^8.3` to `^8.2`.** This is a widening — every
   constraint that resolved before still resolves. It follows harness decision
   D-C: a library's floor is a compatibility promise, not a statement of what it
